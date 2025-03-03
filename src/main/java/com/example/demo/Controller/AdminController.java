@@ -46,4 +46,24 @@ public class AdminController {
 		}
 	}
 	
+	
+//	public ResponseEntity<Object> addHosteller(@RequestBody Map<String, String> hosteller) {
+//		
+//		try {
+//			
+//			String name = hosteller.get("name");
+//			String phone = hosteller.get("phone");
+//			String email = hosteller.get("email");
+//			String password = passwordEncoder.encode(hosteller.get("phone"));
+//			String address = hosteller.get("address");
+//			String emergencyContact = hosteller.get("emergencyContact");
+//			
+//			
+//			
+//		}catch (Exception e) {
+//			// TODO: handle exception
+//		}
+//		
+// }
+	
 }
