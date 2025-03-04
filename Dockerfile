@@ -1,14 +1,12 @@
-# Step 1: Use an official Java runtime as a parent image
-FROM openjdk:17-jdk-slim
-
-# Step 2: Set the working directory in the container
+# Step 1: Build the JAR inside Docker
+FROM maven:3.8.6-openjdk-17 AS build
 WORKDIR /app
+COPY . .
+RUN mvn clean package -DskipTests
 
-# Step 3: Copy the JAR file from the host machine to the container
-COPY target/*.jar app.jar
-
-# Step 4: Expose the application port (same as your Spring Boot server.port)
+# Step 2: Run the JAR with Java
+FROM openjdk:17-jdk-slim
+WORKDIR /app
+COPY --from=build /app/target/*.jar app.jar
 EXPOSE 8080
-
-# Step 5: Run the application
 CMD ["java", "-jar", "app.jar"]
