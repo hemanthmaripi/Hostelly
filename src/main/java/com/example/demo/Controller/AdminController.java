@@ -27,6 +27,7 @@ public class AdminController {
 	private BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
 	
 	
+	
 	@PostMapping("/admin")
 	public ResponseEntity<Object> addAdmin(@RequestBody Map<String,String> admin) {
 		try {

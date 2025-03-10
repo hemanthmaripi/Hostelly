@@ -2,6 +2,8 @@ package com.example.demo.Service;
 
 
 
+import java.util.Optional;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -23,4 +25,15 @@ public class HostelService {
 		}
 		
 	}
+	
+	public boolean findByPhone(String phone) {
+		Optional<Hostel> hostel = hostelRepository.findByPhone(phone);
+		
+		if(hostel.isEmpty()) {
+			return false;
+		}else {
+			return true;
+		}
+	}
+	
 }

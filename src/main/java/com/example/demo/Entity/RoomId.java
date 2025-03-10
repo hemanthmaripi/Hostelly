@@ -7,7 +7,11 @@ import jakarta.persistence.Embeddable;
 @Embeddable
 public class RoomId implements Serializable {  
 
-    private int roomNo;
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+	private int roomNo;
     private int hostel_id;
 
     public RoomId() {}

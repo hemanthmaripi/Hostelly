@@ -1,6 +1,5 @@
 package com.example.demo.Controller;
 
-import java.util.List;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,7 +11,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.example.demo.Entity.Admin;
 import com.example.demo.Entity.Hostel;
-import com.example.demo.Entity.Hosteller;
 import com.example.demo.Service.AdminService;
 import com.example.demo.Service.HostelService;
 
