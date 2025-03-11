@@ -179,6 +179,22 @@ public class AuthController {
 		}
 	}
 	
+	@PostMapping("/forgot-password")
+	public ResponseEntity<Object> forgotPassword(@RequestBody Map<String, String> userInfo) {
+		try {
+			String email = userInfo.get("email");
+			String password = userInfo.get("password");
+			
+			authService.forgotPassword(email, password);
+			
+			return ResponseEntity.ok("Password Resetted Successfully");
+		} catch (Exception e) {
+			// TODO: handle exception
+			e.printStackTrace();
+			return ResponseEntity.badRequest().body(e.getMessage());
+		}
+	}
+	
 
 	
 	

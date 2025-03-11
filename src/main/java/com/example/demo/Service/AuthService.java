@@ -88,6 +88,15 @@ public class AuthService {
 		}
 
 		
+		public void forgotPassword(String email, String password) {
+			
+			Admin admin = adminRepository.findByEmail(email).orElseThrow(() -> new RuntimeException("User not found with this email"));
+			
+			admin.setPassword(passwordEncoder.encode(password));
+			adminRepository.save(admin);
+			
+		}
+		
 		// Generates OTP
 		public String generateOtp() {
 			String otp = String.valueOf(100000 + new Random().nextInt(900000));  // Generates 6-digit OTP

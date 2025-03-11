@@ -27,7 +27,7 @@ public class AuthenticationFilter implements Filter {
 	private JWTService jwtService;
 
 	private static final List<String> UNAUTHENTICATED_PATHS = List.of("/api/auth/signup", "/api/auth/login",
-			"/api/auth/send-otp", "/api/auth/verify-otp");
+			"/api/auth/send-otp", "/api/auth/verify-otp", "/api/auth/forgot-password");
 
 	@Override
 	public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain)
@@ -75,7 +75,7 @@ public class AuthenticationFilter implements Filter {
 			}
 
 			// Attach user details to request
-			request.setAttribute("authenticatedUse", authenticatedUser);
+			request.setAttribute("authenticatedUser", authenticatedUser);
 			chain.doFilter(request, response);
 
 		} catch (Exception e) {
