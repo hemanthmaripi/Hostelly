@@ -3,13 +3,16 @@ package com.example.demo.Service;
 
 import java.nio.charset.StandardCharsets;
 import java.util.Date;
+import java.util.LinkedHashMap;
 
 import javax.crypto.SecretKey;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
+import com.example.demo.Entity.Hostel;
 import com.example.demo.Entity.User;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
@@ -37,6 +40,8 @@ public class JWTService {
 				.setSubject(user.getEmail())
 				.claim("name", user.getName())
 				.claim("role", user.getRole())
+				.claim("hostel", user.getHostel())
+				.claim("ID", user.getId())
 				.setIssuedAt(new Date())
 				.setExpiration(new Date(System.currentTimeMillis() + 36000000))
 				.signWith(SIGNIN_KEY).compact();
@@ -54,12 +59,16 @@ public class JWTService {
         String email = claims.getSubject();
         String role = (String) claims.get("role");
         String name = (String) claims.get("name");
-        
-        
-        return new User(email, role, name);
+        Integer ID = (Integer) claims.get("ID");
+        Object hostelObj = claims.get("hostel");
+        Hostel hostel = null;
+
+        if (hostelObj instanceof LinkedHashMap) {
+            ObjectMapper objectMapper = new ObjectMapper();
+            hostel = objectMapper.convertValue(hostelObj, Hostel.class);
+        }
+        return new User(email, role, name, hostel, ID);
 	}
-	
-	
-	
+		
 	
 }

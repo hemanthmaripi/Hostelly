@@ -76,7 +76,7 @@ public class AuthService {
 				
 			} else {
 				
-				Hosteller hosteller = hostellerRepository.findByEmail(email).orElseThrow(()-> new RuntimeException("Invalid Password"));
+				Hosteller hosteller = hostellerRepository.findByEmail(email).orElseThrow(()-> new RuntimeException("Account Not Found on this Account"));
 				
 				if(!passwordEncoder.matches(password, hosteller.getPassword())) {
 					throw new RuntimeException("Invalid Password");

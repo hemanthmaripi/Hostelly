@@ -1,127 +1,168 @@
 package com.example.demo.Entity;
 
+import java.util.Date;
+
 import jakarta.persistence.*;
 
 @Entity
 @Table(name = "hosteller")
 public class Hosteller {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	private int id;
 
-    @Column(nullable = false)
-    private String name;
+	@Column(nullable = false)
+	private String name;
 
-    @Column(nullable = false, unique = true)
-    private String phoneno;
+	@Column(nullable = false, unique = true)
+	private String phoneno;
 
-    @Column(nullable = false, unique = true)
-    private String email;
+	@Column(nullable = false, unique = true)
+	private String email;
 
-    @Column(nullable = false)
-    private String password;
+	@Column(nullable = false)
+	private String password;
 
-    @Column(nullable = false)  // Address is stored as a string in DB
-    private String address;
+	@Column(nullable = false) // Address is stored as a string in DB
+	private String address;
 
-    @Column(nullable = false, unique = true)
-    private String aadharCardNo;
+	@Column(nullable = false, unique = true)
+	private String aadharCardNo;
 
-    @Column(nullable = false)
-    private String emergencyContactNo;
+	@Column(nullable = false)
+	private String emergencyContactNo;
 
-    @ManyToOne
-    @JoinColumns({
-        @JoinColumn(name = "room_no", referencedColumnName = "roomNo"),
-        @JoinColumn(name = "hostel_id", referencedColumnName = "hostel_id")
-    })
-    private Room room;
+	@Column(nullable = false)
+	private Date DOJ;
 
-    public Hosteller() {}
+	@ManyToOne
+	@JoinColumns({ @JoinColumn(name = "room_no", referencedColumnName = "roomNo"),
+			@JoinColumn(name = "hostel_id", referencedColumnName = "hostel_id") })
+	private Room room;
 
-    public Hosteller(String name, String phoneno, String email, String password, String address, 
-                     String aadharCardNo, String emergencyContactNo, Room room) {
-        this.name = name;
-        this.phoneno = phoneno;
-        this.email = email;
-        this.password = password;
-        this.address = address;
-        this.aadharCardNo = aadharCardNo;
-        this.emergencyContactNo = emergencyContactNo;
-        this.room = room;
-    }
+	public Hosteller(int id, String name, String phoneno, String email, String password, String address,
+			String aadharCardNo, String emergencyContactNo, Date dOJ, Room room) {
+		super();
+		this.id = id;
+		this.name = name;
+		this.phoneno = phoneno;
+		this.email = email;
+		this.password = password;
+		this.address = address;
+		this.aadharCardNo = aadharCardNo;
+		this.emergencyContactNo = emergencyContactNo;
+		DOJ = dOJ;
+		this.room = room;
+	}
 
-    // Getters & Setters
-    public Long getId() {
-        return id;
-    }
+	public Hosteller(String name, String phoneno, String email, String address, String aadharCardNo,
+			String emergencyContactNo) {
+		super();
+		this.name = name;
+		this.phoneno = phoneno;
+		this.email = email;
+		this.address = address;
+		this.aadharCardNo = aadharCardNo;
+		this.emergencyContactNo = emergencyContactNo;
+	}
 
-    public void setId(Long id) {
-        this.id = id;
-    }
+	public Hosteller(String name, String phoneno, String email, String password, String address, String aadharCardNo,
+			String emergencyContactNo, Date dOJ, Room room) {
+		super();
+		this.name = name;
+		this.phoneno = phoneno;
+		this.email = email;
+		this.password = password;
+		this.address = address;
+		this.aadharCardNo = aadharCardNo;
+		this.emergencyContactNo = emergencyContactNo;
+		DOJ = dOJ;
+		this.room = room;
+	}
 
-    public String getName() {
-        return name;
-    }
+	public Hosteller() {
+		// TODO Auto-generated constructor stub
+	}
 
-    public void setName(String name) {
-        this.name = name;
-    }
+	public int getId() {
+		return id;
+	}
 
-    public String getPhoneno() {
-        return phoneno;
-    }
+	public void setId(int id) {
+		this.id = id;
+	}
 
-    public void setPhoneno(String phoneno) {
-        this.phoneno = phoneno;
-    }
+	public String getName() {
+		return name;
+	}
 
-    public String getEmail() {
-        return email;
-    }
+	public void setName(String name) {
+		this.name = name;
+	}
 
-    public void setEmail(String email) {
-        this.email = email;
-    }
+	public String getPhoneno() {
+		return phoneno;
+	}
 
-    public String getPassword() {
-        return password;
-    }
+	public void setPhoneno(String phoneno) {
+		this.phoneno = phoneno;
+	}
 
-    public void setPassword(String password) {
-        this.password = password;
-    }
+	public String getEmail() {
+		return email;
+	}
 
-    public String getAddress() {
-        return address;
-    }
+	public void setEmail(String email) {
+		this.email = email;
+	}
 
-    public void setAddress(String address) {
-        this.address = address;
-    }
+	public String getPassword() {
+		return password;
+	}
 
-    public String getAadharCardNo() {
-        return aadharCardNo;
-    }
+	public void setPassword(String password) {
+		this.password = password;
+	}
 
-    public void setAadharCardNo(String aadharCardNo) {
-        this.aadharCardNo = aadharCardNo;
-    }
+	public String getAddress() {
+		return address;
+	}
 
-    public String getEmergencyContactNo() {
-        return emergencyContactNo;
-    }
+	public void setAddress(String address) {
+		this.address = address;
+	}
 
-    public void setEmergencyContactNo(String emergencyContactNo) {
-        this.emergencyContactNo = emergencyContactNo;
-    }
+	public String getAadharCardNo() {
+		return aadharCardNo;
+	}
 
-    public Room getRoom() {
-        return room;
-    }
+	public void setAadharCardNo(String aadharCardNo) {
+		this.aadharCardNo = aadharCardNo;
+	}
 
-    public void setRoom(Room room) {
-        this.room = room;
-    }
+	public String getEmergencyContactNo() {
+		return emergencyContactNo;
+	}
+
+	public void setEmergencyContactNo(String emergencyContactNo) {
+		this.emergencyContactNo = emergencyContactNo;
+	}
+
+	public Date getDOJ() {
+		return DOJ;
+	}
+
+	public void setDOJ(Date dOJ) {
+		DOJ = dOJ;
+	}
+
+	public Room getRoom() {
+		return room;
+	}
+
+	public void setRoom(Room room) {
+		this.room = room;
+	}
+
 }

@@ -19,9 +19,21 @@ public class Room {
     @JsonIgnore
     private Hostel hostel;
 
+    @Column(name = "capacity", nullable = false)
     private int capacity; 
+    
+    @Column(name = "occupied", nullable = false, columnDefinition = "INT DEFAULT 0")
+    private int occupied = 0;
 
-    @OneToMany(mappedBy = "room",fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
+    public int getOccupied() {
+		return occupied;
+	}
+
+	public void setOccupied(int occupied) {
+		this.occupied = occupied;
+	}
+
+	@OneToMany(mappedBy = "room",fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Hosteller> hostellers = new ArrayList<>();
 
     public Room() {}

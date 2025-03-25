@@ -1,14 +1,13 @@
 package com.example.demo.Filter;
 
 import java.io.IOException;
+import java.util.Arrays;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 
 import com.example.demo.Entity.User;
 import com.example.demo.Service.JWTService;
-
-import java.util.Arrays;
 
 import jakarta.servlet.Filter;
 import jakarta.servlet.FilterChain;
@@ -27,7 +26,7 @@ public class AuthenticationFilter implements Filter {
 	private JWTService jwtService;
 
 	private static final List<String> UNAUTHENTICATED_PATHS = List.of("/api/auth/signup", "/api/auth/login",
-			"/api/auth/send-otp", "/api/auth/verify-otp", "/api/auth/forgot-password");
+			"/api/auth/send-otp", "/api/auth/verify-otp", "/api/auth/forgot-password", "/api/auth/hosteller/login");
 
 	@Override
 	public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain)
@@ -97,8 +96,9 @@ public class AuthenticationFilter implements Filter {
 			User authenticatedUser = (User) jwtService.validateToken(token);
 
 			System.out.println("User Details { Name: " + authenticatedUser.getName() + "  Email: "
-					+ authenticatedUser.getEmail() + "Role: " + authenticatedUser.getRole());
-
+					+ authenticatedUser.getEmail() + "Role: " + authenticatedUser.getRole() + "Hostel: " + authenticatedUser.getHostel().getName());
+			
+			System.out.println(authenticatedUser.getName());
 			return authenticatedUser;
 		} else {
 			return null;

@@ -6,6 +6,7 @@ import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.example.demo.Entity.Hostel;
 import com.example.demo.Entity.Room;
 import com.example.demo.Entity.RoomId;
 import com.example.demo.Repository.RoomRepository;
@@ -30,9 +31,9 @@ public class RoomService {
 	}
 	
 	
-	public List<Room> getAllRooms() {
+	public List<Room> getAllRooms(Hostel hostel ) {
 		
-		return roomRepository.findAll();
+		return roomRepository.findByHostel(hostel);
 		
 	}
 	
@@ -46,5 +47,16 @@ public class RoomService {
 		return r;
 	}
 	
+	
+	public void deleteRoom(RoomId id) {
+		Room room = roomRepository.findById(id).orElseThrow(() -> new RuntimeException("Room not found with this number")) ;
+		
+		roomRepository.delete(room);
+		
+	}
+	
+	public Room getRoomById(RoomId roomId) {
+		return roomRepository.findById(roomId).orElseThrow(() -> new RuntimeException("Room not found with this number"));
+	}
 	
 }

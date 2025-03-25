@@ -5,6 +5,8 @@ public class User {
 	private String email;
 	private String role;
 	private String name;
+	private Hostel hostel;
+	private int id;
 
 	public String getName() {
 		return name;
@@ -14,11 +16,31 @@ public class User {
 		this.name = name;
 	}
 
-	public User(String email, String role, String name) {
+	public User(String email, String role, String name, Hostel hostel, int id) {
 		super();
+		this.hostel = hostel;
 		this.email = email;
 		this.role = role;
 		this.name = name;
+		this.id = id;
+	}
+
+	
+	
+	public int getId() {
+		return id;
+	}
+
+	public void setId(int id) {
+		this.id = id;
+	}
+
+	public Hostel getHostel() {
+		return hostel;
+	}
+
+	public void setHostel(Hostel hostel) {
+		this.hostel = hostel;
 	}
 
 	public User(String email, String role) {

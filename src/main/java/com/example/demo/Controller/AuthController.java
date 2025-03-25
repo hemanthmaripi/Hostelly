@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.example.demo.Entity.Admin;
 import com.example.demo.Entity.Hostel;
+import com.example.demo.Entity.Hosteller;
 import com.example.demo.Entity.User;
 import com.example.demo.Service.AdminService;
 import com.example.demo.Service.AuthService;
@@ -34,8 +35,8 @@ public class AuthController {
 	private AdminService adminService;
 	private JWTService jwtService;
 
-	public AuthController(AuthService authService, HostelService hostelService,
-			AdminService adminService, JWTService jwtService) {
+	public AuthController(AuthService authService, HostelService hostelService, AdminService adminService,
+			JWTService jwtService) {
 		super();
 		this.passwordEncoder = new BCryptPasswordEncoder();
 		this.authService = authService;
@@ -44,18 +45,17 @@ public class AuthController {
 		this.jwtService = jwtService;
 	}
 
-
-
+	// Create Hostelly account
 
 	@PostMapping("/signup")
 	public ResponseEntity<Object> signUp(@RequestBody Map<String, String> userDetails) {
 		try {
-			
-			if(hostelService.findByPhone(userDetails.get("phone"))){
+
+			if (hostelService.findByPhone(userDetails.get("phone"))) {
 				throw new RuntimeException("Phone Number already exists");
 			}
-			
-			if(adminService.findByEmail(userDetails.get("email"))) {
+
+			if (adminService.findByEmail(userDetails.get("email"))) {
 				throw new RuntimeException("Email already exists");
 			}
 
@@ -81,6 +81,118 @@ public class AuthController {
 		}
 	}
 
+	// Login For Admin
+
+	@PostMapping("/login")
+	public ResponseEntity<Object> login(@RequestBody Map<String, String> login, HttpServletResponse response) {
+		try {
+
+			String email = login.get("email");
+			System.out.println(email);
+			String password = login.get("password");
+			String role = "admin";
+
+			Admin admin = (Admin) authService.authenticate(email, password, role);
+
+			User user = new User(email, role, admin.getName(), admin.getHostel(), admin.getId());
+
+			String token = jwtService.generateToken(user);
+
+			// Adding Cookie to the client
+			Cookie cookie = new Cookie("authToken", token);
+			cookie.setHttpOnly(true);
+			cookie.setPath("/");
+			cookie.setMaxAge(3600);
+			response.addCookie(cookie);
+
+			response.addHeader("Set-Cookie",
+					String.format("authToken=%s; HttpOnly; Path=/; Max-Age=3600; SameSite=None", token));
+
+			Map<String, Object> responseBody = new HashMap<>();
+
+			responseBody.put("message", "Login SuccessFull");
+			responseBody.put("role", user.getRole());
+			responseBody.put("username", user.getEmail());
+
+			return ResponseEntity.ok(responseBody);
+
+		} catch (RuntimeException e) {
+
+			e.printStackTrace();
+			return ResponseEntity.ok("We couldn't found any acoount with this email... please check and try");
+
+		} catch (Exception e) {
+			// TODO: handle exception
+			return null;
+		}
+	}
+
+	// Login For Hosteller Login
+
+	@PostMapping("/hosteller/login")
+	public ResponseEntity<?> hostellerLogin(@RequestBody Map<String, String> login, HttpServletResponse response) {
+
+		try {
+
+			String email = login.get("email");
+			System.out.println(email);
+			String password = login.get("password");
+			String role = "hosteller";
+
+			Hosteller hosteller = (Hosteller) authService.authenticate(email, password, role);
+
+			System.err.println(hosteller.getRoom().getHostel().getName());
+
+			User user = new User(email, role, hosteller.getName(), hosteller.getRoom().getHostel(), hosteller.getId());
+
+			String token = jwtService.generateToken(user);
+
+			// Adding Cookie to the client
+			Cookie cookie = new Cookie("authToken", token);
+			cookie.setHttpOnly(true);
+			cookie.setPath("/");
+			cookie.setMaxAge(3600);
+			response.addCookie(cookie);
+
+			response.addHeader("Set-Cookie",
+					String.format("authToken=%s; HttpOnly; Path=/; Max-Age=3600; SameSite=None", token));
+
+			Map<String, Object> responseBody = new HashMap<>();
+
+			responseBody.put("message", "Login SuccessFull");
+			responseBody.put("role", user.getRole());
+			responseBody.put("username", user.getEmail());
+
+			return ResponseEntity.ok(responseBody);
+
+		} catch (Exception e) {
+			// TODO: handle exception
+			e.printStackTrace();
+			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
+		}
+
+	}
+
+	// Forgot Password
+
+	@PostMapping("/forgot-password")
+	public ResponseEntity<Object> forgotPassword(@RequestBody Map<String, String> userInfo) {
+		try {
+			String email = userInfo.get("email");
+			String password = userInfo.get("password");
+
+			authService.forgotPassword(email, password);
+
+			return ResponseEntity.ok("Password Resetted Successfully");
+		} catch (Exception e) {
+			// TODO: handle exception
+			e.printStackTrace();
+			return ResponseEntity.badRequest().body(e.getMessage());
+		}
+	}
+
+	// Send Otp
+
 	@PostMapping("/send-otp")
 	public ResponseEntity<Object> sendOtp(@RequestParam String email, HttpServletResponse response) {
 		try {
@@ -102,6 +214,8 @@ public class AuthController {
 
 		}
 	}
+
+	// Verify Otp
 
 	@PostMapping("/verify-otp")
 	public String verifyOtp(@RequestParam String otp, HttpServletRequest request) {
@@ -131,76 +245,5 @@ public class AuthController {
 			return "Invalid OTP!";
 		}
 	}
-		
-	
-	
-	@PostMapping("/login")
-	public ResponseEntity<Object> login(@RequestBody Map<String, String> login, HttpServletResponse response) {
-		try {
-			
-			String email = login.get("email");
-			System.out.println(email);
-			String password = login.get("password");
-			String role = "admin";
-			
-			Admin admin = (Admin) authService.authenticate(email, password, role);
-			
-			User user = new User(email, role, admin.getName());
-			
-			String token = jwtService.generateToken(user);
-			
-			
-			// Adding Cookie to the client
-			Cookie cookie = new Cookie("authToken", token);
-			cookie.setHttpOnly(true);
-			cookie.setPath("/");
-			cookie.setMaxAge(3600);
-			response.addCookie(cookie);
 
-			response.addHeader("Set-Cookie",
-					String.format("authToken=%s; HttpOnly; Path=/; Max-Age=3600; SameSite=None", token));
-
-			Map<String, Object> responseBody = new HashMap<>();
-
-			responseBody.put("message", "Login SuccessFull");
-			responseBody.put("role", user.getRole());
-			responseBody.put("username", user.getEmail());
-
-			return ResponseEntity.ok(responseBody);
-			
-		} catch (RuntimeException e) {
-			
-			e.printStackTrace();
-			return ResponseEntity.ok("We couldn't found any acoount with this email... please check and try");
-			
-		} catch (Exception e) {
-			// TODO: handle exception
-			return null;
-		}
-	}
-	
-	@PostMapping("/forgot-password")
-	public ResponseEntity<Object> forgotPassword(@RequestBody Map<String, String> userInfo) {
-		try {
-			String email = userInfo.get("email");
-			String password = userInfo.get("password");
-			
-			authService.forgotPassword(email, password);
-			
-			return ResponseEntity.ok("Password Resetted Successfully");
-		} catch (Exception e) {
-			// TODO: handle exception
-			e.printStackTrace();
-			return ResponseEntity.badRequest().body(e.getMessage());
-		}
-	}
-	
-
-	
-	
-//	@PostMapping("/hosteller/login")
-//	public ResponseEntity<?> hostellerLogin(@RequestBody Map<String, String> login) {
-//		
-//	}
-	
 }
